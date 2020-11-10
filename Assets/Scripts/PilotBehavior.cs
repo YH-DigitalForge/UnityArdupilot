@@ -20,15 +20,15 @@ public class PilotBehavior : MonoBehaviour
         {
             Debug.Log(portName);
         }
-        port = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.None);
+        port = new SerialPort(portName, baudRate);
         port.DataReceived += new SerialDataReceivedEventHandler(serialport_datareceived);
-        port.Open();
     }
 
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log($"Starting object with port (name={port.PortName},baudrate={port.BaudRate.ToString()})");
+        port.Open();
     }
 
     private void serialport_datareceived(object sender, SerialDataReceivedEventArgs e)
@@ -47,7 +47,15 @@ public class PilotBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        string serialRead = port.ReadLine();
+        Debug.Log($"Read line from serial : {serialRead}");
+        string[] parsed = serialRead.Split('|');
+        foreach (string data in parsed)
+        {
+            Debug.Log($"Parsed serial value : {data}");
+        }
+
+        transform.rotation = Quaternion.Euler(float.Parse(parsed[0]), float.Parse(parsed[1]), float.Parse(parsed[2]));        // Rotate GameObject using Quaternion.Euler
     }
     
     // Class Finalizer
