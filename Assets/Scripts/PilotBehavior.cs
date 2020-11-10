@@ -10,7 +10,7 @@ public class PilotBehavior : MonoBehaviour
 
     public int baudRate = 9600;
 
-    private SerialPort port;
+    private static SerialPort port;
 
     // Awake method is called when each objects are load when Scene has been loaded.
     private void Awake()
@@ -20,7 +20,7 @@ public class PilotBehavior : MonoBehaviour
         {
             Debug.Log(portName);
         }
-        SerialPort port = new SerialPort(portName, baudRate);
+        port = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.None);
         port.DataReceived += new SerialDataReceivedEventHandler(serialport_datareceived);
         port.Open();
     }
@@ -40,11 +40,19 @@ public class PilotBehavior : MonoBehaviour
         {
             Debug.Log($"Parsed serial value : {data}");
         }
+
+        transform.rotation = Quaternion.Euler(float.Parse(parsed[0]), float.Parse(parsed[1]), float.Parse(parsed[2]));        // Rotate GameObject using Quaternion.Euler
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+    
+    // Class Finalizer
+    ~PilotBehavior()
+    {
+        port.Close();   
     }
 }
