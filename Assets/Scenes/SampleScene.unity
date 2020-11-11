@@ -389,7 +389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 1391215486}
-  portName: COM7
+  portName: COM3
   baudRate: 9600
 --- !u!54 &1391215486
 Rigidbody:

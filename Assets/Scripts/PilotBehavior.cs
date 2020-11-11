@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Globalization;
+using System.IO;
 using System.IO.Ports;
 using UnityEngine;
 
@@ -17,10 +19,14 @@ public class PilotBehavior : MonoBehaviour
     public static string Gyro = "Gy";
 
     public static string Accel = "Ac";
+
+    public static CultureInfo ci;
     
     /*
      * Serial Info
      */
+    public bool doAutoDetect = false;                // Some kind of autodetect stuff.
+    
     public string portName = "COM7";
 
     public int baudRate = 9600;
@@ -37,6 +43,10 @@ public class PilotBehavior : MonoBehaviour
         }
         port = new SerialPort(this.portName, this.baudRate);
         // port.DataReceived += new SerialDataReceivedEventHandler(serialport_datareceived);
+        
+        // I hate this stuff; CulturInfo disrupt parsing string to integer.
+        ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        ci.NumberFormat.CurrencyDecimalSeparator = ".";
     }
 
     // Start is called before the first frame update
@@ -68,24 +78,28 @@ public class PilotBehavior : MonoBehaviour
             string serialRead = port.ReadLine();
             Debug.Log($"Read line from serial : {serialRead}");
             string[] parsed = serialRead.Split('|');
-            foreach (string data in parsed)
-            {
-                Debug.Log($"Parsed serial value : {data}");
-            }
-        
-            // Rotate object
+
+            int gyroX = int.Parse(parsed[0].Replace(Gyro + "X=", ""), NumberStyles.Any, ci);
+            int gyroY = int.Parse(parsed[1].Replace(Gyro + "Y=", ""), NumberStyles.Any, ci);
+            int gyroZ = int.Parse(parsed[2].Replace(Gyro + "Z=", ""), NumberStyles.Any, ci);
+
+            // Rotate GameObject using Quaternion.Euler
             transform.rotation = Quaternion.Euler(
-                int.Parse(parsed[0].Replace(Gyro+"x", "")),
-                int.Parse(parsed[1].Replace(Gyro+"y", "")),
-                int.Parse(parsed[2].Replace(Gyro+"z", ""))
-            );        // Rotate GameObject using Quaternion.Euler
-        
-            // Move object
-            rigidbody.AddForce(
-                int.Parse(parsed[3].Replace(Accel+"x", "")),
-                int.Parse(parsed[4].Replace(Accel+"y", "")),
-                int.Parse(parsed[5].Replace(Accel+"z", ""))
+                gyroX,
+                gyroY,
+                gyroZ
             );
+
+            int accX = int.Parse(parsed[3].Replace(Accel + "X=", ""), NumberStyles.Any, ci);
+            int accY = int.Parse(parsed[4].Replace(Accel + "Y=", ""), NumberStyles.Any, ci);
+            int accZ = int.Parse(parsed[5].Replace(Accel + "Z=", ""), NumberStyles.Any, ci);
+
+            // Move object
+            // rigidbody.AddForce(
+            //     accX,
+            //     accY,
+            //     accZ
+            // );
         }
         catch (IOException exception)
         {
