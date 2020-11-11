@@ -1,11 +1,26 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.IO.Ports;
 using UnityEngine;
 
 public class PilotBehavior : MonoBehaviour
 {
+    /*
+     * Gameobject info
+     */
+    public Rigidbody rigidbody;
+    
+    
+    /*
+     * Communication Format
+     */
+
+    public static string Gyro = "Gy";
+
+    public static string Accel = "Ac";
+    
+    /*
+     * Serial Info
+     */
     public string portName = "COM7";
 
     public int baudRate = 9600;
@@ -20,8 +35,8 @@ public class PilotBehavior : MonoBehaviour
         {
             Debug.Log(portName);
         }
-        port = new SerialPort(portName, baudRate);
-        port.DataReceived += new SerialDataReceivedEventHandler(serialport_datareceived);
+        port = new SerialPort(this.portName, this.baudRate);
+        // port.DataReceived += new SerialDataReceivedEventHandler(serialport_datareceived);
     }
 
     // Start is called before the first frame update
@@ -31,6 +46,7 @@ public class PilotBehavior : MonoBehaviour
         port.Open();
     }
 
+    // Event listener of SerialDataReceivedEvent
     private void serialport_datareceived(object sender, SerialDataReceivedEventArgs e)
     {
         string serialRead = port.ReadLine();
@@ -47,15 +63,35 @@ public class PilotBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        string serialRead = port.ReadLine();
-        Debug.Log($"Read line from serial : {serialRead}");
-        string[] parsed = serialRead.Split('|');
-        foreach (string data in parsed)
+        try
         {
-            Debug.Log($"Parsed serial value : {data}");
+            string serialRead = port.ReadLine();
+            Debug.Log($"Read line from serial : {serialRead}");
+            string[] parsed = serialRead.Split('|');
+            foreach (string data in parsed)
+            {
+                Debug.Log($"Parsed serial value : {data}");
+            }
+        
+            // Rotate object
+            transform.rotation = Quaternion.Euler(
+                int.Parse(parsed[0].Replace(Gyro+"x", "")),
+                int.Parse(parsed[1].Replace(Gyro+"y", "")),
+                int.Parse(parsed[2].Replace(Gyro+"z", ""))
+            );        // Rotate GameObject using Quaternion.Euler
+        
+            // Move object
+            rigidbody.AddForce(
+                int.Parse(parsed[3].Replace(Accel+"x", "")),
+                int.Parse(parsed[4].Replace(Accel+"y", "")),
+                int.Parse(parsed[5].Replace(Accel+"z", ""))
+            );
         }
-
-        transform.rotation = Quaternion.Euler(float.Parse(parsed[0]), float.Parse(parsed[1]), float.Parse(parsed[2]));        // Rotate GameObject using Quaternion.Euler
+        catch (IOException exception)
+        {
+            Debug.LogError("Port is not open!");
+            Debug.LogError(exception);
+        }
     }
     
     // Class Finalizer
