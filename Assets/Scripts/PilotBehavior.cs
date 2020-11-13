@@ -84,10 +84,11 @@ public class PilotBehavior : MonoBehaviour
             int gyroZ = int.Parse(parsed[2].Replace(Gyro + "Z=", ""), NumberStyles.Any, ci);
 
             // Rotate GameObject using Quaternion.Euler
-            transform.rotation = Quaternion.Euler(
+            transform.Rotate(
                 gyroX,
                 gyroY,
-                gyroZ
+                gyroZ,
+                Space.Self
             );
 
             int accX = int.Parse(parsed[3].Replace(Accel + "X=", ""), NumberStyles.Any, ci);
