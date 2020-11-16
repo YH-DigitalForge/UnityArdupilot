@@ -65,6 +65,12 @@ public class PilotBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            isFirstPerson = !isFirstPerson;
+            CameraUpdate();
+        }
+        
         try
         {
             string serialRead = port.ReadLine();
@@ -77,12 +83,6 @@ public class PilotBehavior : MonoBehaviour
         {
             Debug.LogError("Port is not open!");
             Debug.LogError(exception);
-        }
-
-        if (Input.GetKeyDown(KeyCode.F5))
-        {
-            isFirstPerson = !isFirstPerson;
-            CameraUpdate();
         }
     }
 
@@ -102,6 +102,14 @@ public class PilotBehavior : MonoBehaviour
         float accX = ParseData(Accel, Axis.X, parsed[3]);
         float accY = ParseData(Accel, Axis.Y, parsed[4]);
         float accZ = ParseData(Accel, Axis.Z, parsed[5]);
+
+        // Rotate GameObject using Quaternion.Euler
+        transform.rotation = Quaternion.Euler(angleX, angleY, angleZ);
+        
+        // Move object
+        GetComponent<Rigidbody>().AddForce(accX, accY, accZ);
+
+
         float gyroX = ParseData(Gyro, Axis.X, parsed[6]);
         float gyroY = ParseData(Gyro, Axis.Y, parsed[7]);
         float gyroZ = ParseData(Gyro, Axis.Z, parsed[8]);
@@ -111,12 +119,6 @@ public class PilotBehavior : MonoBehaviour
         float gyroAngleX = ParseData(Gyro + Angle, Axis.X, parsed[12]);
         float gyroAngleY = ParseData(Gyro + Angle, Axis.Y, parsed[13]);
         float gyroAngleZ = ParseData(Gyro + Angle, Axis.Z, parsed[14]);
-
-        // Rotate GameObject using Quaternion.Euler
-        transform.rotation = Quaternion.Euler(angleX, angleY, angleZ);
-        
-        // Move object
-        this.GetComponent<Rigidbody>().AddForce(accX, accY, accZ);
     }
     
     /*
