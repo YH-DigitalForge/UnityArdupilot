@@ -12,7 +12,8 @@ public class PilotBehavior : MonoBehaviour
     public Camera firstPerson;
     public Camera secondPerson;
     public bool isFirstPerson = false;
-    
+
+    public float speed = 1.0f;    // Speed of Pilot.
     
     /*
      * Communication Format
@@ -37,29 +38,22 @@ public class PilotBehavior : MonoBehaviour
     /*
      * Serial Info
      */
-    public bool doAutoDetect = false;                // Some kind of autodetect stuff.
+    public bool doAutoDetect = true;                // Some kind of autodetect stuff.
     public string portName = "COM7";
     public int baudRate = 9600;
-    private static SerialPort port;
+    private static SerialPort _port;
 
     // Awake method is called when each objects are load when Scene has been loaded.
     private void Awake()
     {
-        port = new SerialPort(this.portName, this.baudRate);
-        // Detect available ports
-        foreach (string portName in SerialPort.GetPortNames())
-        {
-            Debug.Log(portName);
-            
-        }
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log($"Starting object with port (name={port.PortName},baudrate={port.BaudRate.ToString()})");
-        port.Open();
         CameraUpdate();
+        ConnectSerial();
     }
 
     // Update is called once per frame
@@ -73,7 +67,7 @@ public class PilotBehavior : MonoBehaviour
         
         try
         {
-            string serialRead = port.ReadLine();
+            string serialRead = _port.ReadLine();
             Debug.Log($"Read line from serial : {serialRead}");
             
             if (serialRead.StartsWith(Indicator))
@@ -86,10 +80,50 @@ public class PilotBehavior : MonoBehaviour
         }
     }
 
+    void ConnectSerial()
+    {
+        if (doAutoDetect)
+        {
+            // Detect available ports
+            foreach (string portname in SerialPort.GetPortNames())
+            {
+                Debug.Log($"Validating port `{_port}`...");
+                _port = new SerialPort(portname, baudRate);
+                try
+                {
+                    _port.Open();
+                    string line = _port.ReadLine();
+                    if (line.StartsWith(Indicator))
+                    {
+                        Debug.Log("Found valid Arduino serial port! connecting with it.");
+                        break;
+                    }
+                }
+                catch (IOException e)
+                {
+                    Debug.LogError($"Cannot open port {portname}. Trying next port...");
+                    _port.Close();
+                    _port = null;
+                }
+            }
+
+            throw new IOException("Cannot find valid Arduino serial port! Throwing IOException :(");
+        }
+        else
+        {
+            _port = new SerialPort(portName, baudRate);
+            _port.Open();
+        }
+        
+        Debug.Log($"Starting object with port (name={_port.PortName},baudrate={_port.BaudRate.ToString()})");
+    }
+    
     void CameraUpdate()
     {
         firstPerson.gameObject.SetActive(isFirstPerson);
+        firstPerson.GetComponent<AudioListener>().enabled = isFirstPerson;
         secondPerson.gameObject.SetActive(!isFirstPerson);
+        secondPerson.GetComponent<AudioListener>().enabled = !isFirstPerson;
     }
 
     void PilotUpdate(string line)
@@ -107,7 +141,7 @@ public class PilotBehavior : MonoBehaviour
         transform.rotation = Quaternion.Euler(angleX, angleY, angleZ);
         
         // Move object
-        GetComponent<Rigidbody>().AddForce(accX, accY, accZ);
+        transform.Translate(transform.rotation.eulerAngles * speed);
 
 
         float gyroX = ParseData(Gyro, Axis.X, parsed[6]);
@@ -140,6 +174,6 @@ public class PilotBehavior : MonoBehaviour
     // Class Finalizer
     ~PilotBehavior()
     {
-        port.Close();
+        _port?.Close();
     }
 }
