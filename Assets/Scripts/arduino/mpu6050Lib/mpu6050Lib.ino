@@ -15,7 +15,7 @@ void setup() {
 void loop() {
   mpu6050.update();
 
-  if(millis() - timer > 5){
+  if(millis() - timer > 10){
     /*
     0 ~ 2 : Angle X ~ Z
     3 ~ 5 : Acc X ~ Z

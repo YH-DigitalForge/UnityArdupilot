@@ -67,6 +67,11 @@ public class PilotBehavior : MonoBehaviour
         
         try
         {
+            if (!_port.IsOpen)
+            {
+                _port.Open();
+            }
+            
             string serialRead = _port.ReadLine();
             Debug.Log($"Read line from serial : {serialRead}");
             
