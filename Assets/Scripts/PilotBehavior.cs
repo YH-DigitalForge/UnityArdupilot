@@ -12,8 +12,9 @@ public class PilotBehavior : MonoBehaviour
     public Camera firstPerson;
     public Camera secondPerson;
     public bool isFirstPerson = false;
+    public bool lockPosition = false;
 
-    public float speed = 1.0f;    // Speed of Pilot.
+    public float speed = 0.1f;    // Speed of Pilot.
     
     /*
      * Communication Format
@@ -39,14 +40,20 @@ public class PilotBehavior : MonoBehaviour
      * Serial Info
      */
     public bool doAutoDetect = true;                // Some kind of autodetect stuff.
-    public string portName = "COM7";
+    public string portName = "COM3";
     public int baudRate = 9600;
     private static SerialPort _port;
 
     // Awake method is called when each objects are load when Scene has been loaded.
     private void Awake()
     {
-        
+        _port = new SerialPort();
+        _port.BaudRate = baudRate;
+        _port.BaudRate = baudRate;
+        _port.BaudRate = baudRate;
+        _port.BaudRate = baudRate;
+        _port.BaudRate = baudRate;
+        _port.BaudRate = baudRate;
     }
 
     // Start is called before the first frame update
@@ -69,7 +76,7 @@ public class PilotBehavior : MonoBehaviour
         {
             if (!_port.IsOpen)
             {
-                _port.Open();
+                ConnectSerial();
             }
             
             string serialRead = _port.ReadLine();
@@ -89,34 +96,44 @@ public class PilotBehavior : MonoBehaviour
     {
         if (doAutoDetect)
         {
+            Debug.Log("Displaying ports...");
             // Detect available ports
             foreach (string portname in SerialPort.GetPortNames())
             {
-                Debug.Log($"Validating port `{_port}`...");
-                _port = new SerialPort(portname, baudRate);
-                try
+                Debug.Log($"Port : {portname}, Displayig Serial outputs...");
+                _port.PortName = portname;
+                _port.Open();
+                for (int i = 0; i < 5; i++)
                 {
-                    _port.Open();
-                    string line = _port.ReadLine();
-                    if (line.StartsWith(Indicator))
-                    {
-                        Debug.Log("Found valid Arduino serial port! connecting with it.");
-                        break;
-                    }
+                    Debug.Log(_port.ReadLine());
                 }
-                catch (IOException e)
-                {
-                    Debug.LogError($"Cannot open port {portname}. Trying next port...");
-                    _port.Close();
-                    _port = null;
-                }
+                // Debug.Log($"Validating port `{portname}`...");
+                // _port.PortName = portname;
+                // try
+                // {
+                //     _port.Open();
+                //     string line = _port.ReadLine();
+                //     if (line.StartsWith(Indicator))
+                //     {
+                //         Debug.Log("Found valid Arduino serial port! connecting with it.");
+                //         break;
+                //     }
+                //     Debug.Log($"Found port {portname} is available, ");
+                //     _port.Close();
+                // }
+                // catch (IOException e)
+                // {
+                //     Debug.LogError($"Cannot open port {portname}. Trying next port...");
+                //     _port.Close();
+                // }
             }
 
-            throw new IOException("Cannot find valid Arduino serial port! Throwing IOException :(");
+            // throw new IOException("Cannot find valid Arduino serial port! Throwing IOException :(");
+            throw new IOException("Select port with given ports list!");
         }
         else
         {
-            _port = new SerialPort(portName, baudRate);
+            _port.PortName = portName;
             _port.Open();
         }
         
@@ -141,14 +158,6 @@ public class PilotBehavior : MonoBehaviour
         float accX = ParseData(Accel, Axis.X, parsed[3]);
         float accY = ParseData(Accel, Axis.Y, parsed[4]);
         float accZ = ParseData(Accel, Axis.Z, parsed[5]);
-
-        // Rotate GameObject using Quaternion.Euler
-        transform.rotation = Quaternion.Euler(angleX, angleY, angleZ);
-        
-        // Move object
-        transform.Translate(transform.rotation.eulerAngles * speed);
-
-
         float gyroX = ParseData(Gyro, Axis.X, parsed[6]);
         float gyroY = ParseData(Gyro, Axis.Y, parsed[7]);
         float gyroZ = ParseData(Gyro, Axis.Z, parsed[8]);
@@ -158,6 +167,64 @@ public class PilotBehavior : MonoBehaviour
         float gyroAngleX = ParseData(Gyro + Angle, Axis.X, parsed[12]);
         float gyroAngleY = ParseData(Gyro + Angle, Axis.Y, parsed[13]);
         float gyroAngleZ = ParseData(Gyro + Angle, Axis.Z, parsed[14]);
+        
+        // Debug.Log($"Angle<x={angleX},y={angleY},z={angleZ}>");
+        // Debug.Log($"Acceleration<x={accX},y={accY},z={accZ}>");
+        // Debug.Log($"Gyro<x={gyroX},y={gyroY},z={gyroZ}>");
+        // Debug.Log($"AccelerationAngle<x={accAngleX},y={accAngleY}>");
+        // Debug.Log($"GyroAngle<x={gyroAngleX},y={gyroAngleY},z={gyroAngleZ}>");
+        // Debug.Log($"Temperature<t={tmp}>");
+        
+        Debug.Log(
+            $"Angle<x={angleX},y={angleY},z={angleZ}>," +
+            $"Acceleration<x={accX},y={accY},z={accZ}>," +
+            $"Gyro<x={gyroX},y={gyroY},z={gyroZ}>," +
+            $"AccelerationAngle<x={accAngleX},y={accAngleY}>," +
+            $"GyroAngle<x={gyroAngleX},y={gyroAngleY},z={gyroAngleZ}>," +
+            $"Temperature<t={tmp}>"
+        );
+
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        {
+            // Tilt front
+            transform.Rotate(transform.forward * Time.deltaTime);
+        }
+
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        {
+            // Tilt left
+            transform.Rotate(-transform.right * Time.deltaTime);
+        }
+
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        {
+            // Tilt back
+            transform.Rotate(-transform.forward * Time.deltaTime);
+        }
+
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        {
+            // Tilt right
+            transform.Rotate(transform.right * Time.deltaTime);
+        }
+
+        if (Input.GetKey(KeyCode.R))
+        {
+            // Reset position
+            transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0, 0, 0));
+        }
+
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            // Close game
+        }
+        
+        if (!lockPosition)
+            // Set Pilot object rotation to MPU6050's rotation using Quaternion.Euler
+            // transform.rotation = Quaternion.Euler(angleX, angleY, angleZ);
+        
+            // Move object
+            transform.Translate(transform.rotation.eulerAngles * Time.deltaTime * speed);
     }
     
     /*
