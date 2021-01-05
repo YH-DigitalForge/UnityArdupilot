@@ -11,8 +11,15 @@ public class PilotBehavior : MonoBehaviour
      */
     public Camera firstPerson;
     public Camera secondPerson;
-    public bool isFirstPerson = false;
-    public bool lockPosition = false;
+    public Camera thirdPerson;
+    
+    
+    public enum CamPerspective
+    {
+        First, Second, Third
+    }
+    
+    public CamPerspective camPerspective = CamPerspective.Third;
 
     public float speed = 0.1f;    // Speed of Pilot.
     
@@ -20,10 +27,12 @@ public class PilotBehavior : MonoBehaviour
      * Communication Format
      */
     private const string Indicator = "[UnityArdupilot]";
-    private const string Gyro = "Gyro";
-    private const string Accel = "Acc";
     private const string Angle = "Angle";
-    private const string Temperature = "Tmp";
+
+    public bool fixX = false;
+    public bool fixY = false;
+    public bool fixZ = false;
+    
     
     /*
      * [Arduino Serial Communication Datasheet]
@@ -49,17 +58,12 @@ public class PilotBehavior : MonoBehaviour
     {
         _port = new SerialPort();
         _port.BaudRate = baudRate;
-        _port.BaudRate = baudRate;
-        _port.BaudRate = baudRate;
-        _port.BaudRate = baudRate;
-        _port.BaudRate = baudRate;
-        _port.BaudRate = baudRate;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        CameraUpdate();
+        CameraInit();
         ConnectSerial();
     }
 
@@ -68,8 +72,7 @@ public class PilotBehavior : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F5))
         {
-            isFirstPerson = !isFirstPerson;
-            CameraUpdate();
+            CameraChange();
         }
         
         try
@@ -139,34 +142,77 @@ public class PilotBehavior : MonoBehaviour
         
         Debug.Log($"Starting object with port (name={_port.PortName},baudrate={_port.BaudRate.ToString()})");
     }
-    
-    void CameraUpdate()
+
+    void CameraInit()
     {
-        firstPerson.gameObject.SetActive(isFirstPerson);
-        firstPerson.GetComponent<AudioListener>().enabled = isFirstPerson;
-        secondPerson.gameObject.SetActive(!isFirstPerson);
-        secondPerson.GetComponent<AudioListener>().enabled = !isFirstPerson;
+        switch (camPerspective)
+        {
+            case CamPerspective.First:
+                SetCameraStatus(firstPerson, true);
+                SetCameraStatus(secondPerson, false);
+                SetCameraStatus(thirdPerson, false);
+                break;
+            case CamPerspective.Second:
+                SetCameraStatus(firstPerson, false);
+                SetCameraStatus(secondPerson, true);
+                SetCameraStatus(thirdPerson, false);
+                break;
+            case CamPerspective.Third:
+                SetCameraStatus(firstPerson, false);
+                SetCameraStatus(secondPerson, false);
+                SetCameraStatus(thirdPerson, true);
+                break;
+        }
+    }
+    
+    void CameraChange()
+    {
+        switch (camPerspective)
+        {
+            case CamPerspective.First:
+                SetCameraStatus(firstPerson, false);
+                SetCameraStatus(secondPerson, true);
+                camPerspective = CamPerspective.Second;
+                break;
+            case CamPerspective.Second:
+                SetCameraStatus(secondPerson, false);
+                SetCameraStatus(thirdPerson, true);
+                camPerspective = CamPerspective.Third;
+                break;
+            case CamPerspective.Third:
+                SetCameraStatus(thirdPerson, false);
+                SetCameraStatus(firstPerson, true);
+                camPerspective = CamPerspective.First;
+                break;
+        }
+    }
+
+    void SetCameraStatus(Camera camera, bool isActive)
+    {
+        // camera.gameObject.SetActive(isActive);
+        // camera.GetComponent<AudioListener>().enabled = isActive;
+        camera.enabled = isActive;
     }
 
     void PilotUpdate(string line)
     {
-        string[] parsed = line.Remove(0, Indicator.Length).Split('|');
+        string[] parsed = line.Remove(0, Indicator.Length).Split(',');
         
         float angleX = ParseData(Angle, Axis.X, parsed[0]);
         float angleY = ParseData(Angle, Axis.Y, parsed[1]);
         float angleZ = ParseData(Angle, Axis.Z, parsed[2]);
-        float accX = ParseData(Accel, Axis.X, parsed[3]);
-        float accY = ParseData(Accel, Axis.Y, parsed[4]);
-        float accZ = ParseData(Accel, Axis.Z, parsed[5]);
-        float gyroX = ParseData(Gyro, Axis.X, parsed[6]);
-        float gyroY = ParseData(Gyro, Axis.Y, parsed[7]);
-        float gyroZ = ParseData(Gyro, Axis.Z, parsed[8]);
-        float tmp = ParseData(Temperature, Axis.None, parsed[9]);
-        float accAngleX = ParseData(Accel + Angle, Axis.X, parsed[10]);
-        float accAngleY = ParseData(Accel + Angle, Axis.Y, parsed[11]);
-        float gyroAngleX = ParseData(Gyro + Angle, Axis.X, parsed[12]);
-        float gyroAngleY = ParseData(Gyro + Angle, Axis.Y, parsed[13]);
-        float gyroAngleZ = ParseData(Gyro + Angle, Axis.Z, parsed[14]);
+        // float accX = ParseData(Accel, Axis.X, parsed[3]);
+        // float accY = ParseData(Accel, Axis.Y, parsed[4]);
+        // float accZ = ParseData(Accel, Axis.Z, parsed[5]);
+        // float gyroX = ParseData(Gyro, Axis.X, parsed[6]);
+        // float gyroY = ParseData(Gyro, Axis.Y, parsed[7]);
+        // float gyroZ = ParseData(Gyro, Axis.Z, parsed[8]);
+        // float tmp = ParseData(Temperature, Axis.None, parsed[9]);
+        // float accAngleX = ParseData(Accel + Angle, Axis.X, parsed[10]);
+        // float accAngleY = ParseData(Accel + Angle, Axis.Y, parsed[11]);
+        // float gyroAngleX = ParseData(Gyro + Angle, Axis.X, parsed[12]);
+        // float gyroAngleY = ParseData(Gyro + Angle, Axis.Y, parsed[13]);
+        // float gyroAngleZ = ParseData(Gyro + Angle, Axis.Z, parsed[14]);
         
         // Debug.Log($"Angle<x={angleX},y={angleY},z={angleZ}>");
         // Debug.Log($"Acceleration<x={accX},y={accY},z={accZ}>");
@@ -175,56 +221,35 @@ public class PilotBehavior : MonoBehaviour
         // Debug.Log($"GyroAngle<x={gyroAngleX},y={gyroAngleY},z={gyroAngleZ}>");
         // Debug.Log($"Temperature<t={tmp}>");
         
-        Debug.Log(
-            $"Angle<x={angleX},y={angleY},z={angleZ}>," +
-            $"Acceleration<x={accX},y={accY},z={accZ}>," +
-            $"Gyro<x={gyroX},y={gyroY},z={gyroZ}>," +
-            $"AccelerationAngle<x={accAngleX},y={accAngleY}>," +
-            $"GyroAngle<x={gyroAngleX},y={gyroAngleY},z={gyroAngleZ}>," +
-            $"Temperature<t={tmp}>"
-        );
-
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-        {
-            // Tilt front
-            transform.Rotate(transform.forward * Time.deltaTime);
-        }
-
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-        {
-            // Tilt left
-            transform.Rotate(-transform.right * Time.deltaTime);
-        }
-
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-        {
-            // Tilt back
-            transform.Rotate(-transform.forward * Time.deltaTime);
-        }
-
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-        {
-            // Tilt right
-            transform.Rotate(transform.right * Time.deltaTime);
-        }
+        // Debug.Log(
+        //     $"Angle<x={angleX},y={angleY},z={angleZ}>," +
+        //     $"Acceleration<x={accX},y={accY},z={accZ}>," +
+        //     $"Gyro<x={gyroX},y={gyroY},z={gyroZ}>," +
+        //     $"AccelerationAngle<x={accAngleX},y={accAngleY}>," +
+        //     $"GyroAngle<x={gyroAngleX},y={gyroAngleY},z={gyroAngleZ}>," +
+        //     $"Temperature<t={tmp}>"
+        // );
+        
+        Debug.Log($"Angle<x={angleX},y={angleY},z={angleZ}>");
 
         if (Input.GetKey(KeyCode.R))
         {
             // Reset position
-            transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0, 0, 0));
+            Debug.Log("Reset rotation to (0,0,0)");
+            transform.rotation = Quaternion.Euler(0, 0, 0);
         }
 
         if (Input.GetKey(KeyCode.Escape))
         {
             // Close game
+            Debug.Log("Close the game.");
+            Application.Quit();
         }
-        
-        if (!lockPosition)
-            // Set Pilot object rotation to MPU6050's rotation using Quaternion.Euler
-            // transform.rotation = Quaternion.Euler(angleX, angleY, angleZ);
-        
-            // Move object
-            transform.Translate(transform.rotation.eulerAngles * Time.deltaTime * speed);
+        float fAngleX = fixX ? 0.0f : -angleX;
+        float fAngleY = fixY ? 0.0f : angleY;
+        float fAngleZ = fixZ ? 0.0f : angleZ;
+        Debug.Log($"FixedAngle<x={fAngleX},y={fAngleY},z={fAngleZ}>");
+        transform.rotation = Quaternion.Euler(fAngleX, fAngleY, fAngleZ);
     }
     
     /*

@@ -700,6 +700,38 @@ float    base_y_gyro;
 float    base_z_gyro;
 
 
+void PrintAccelTGyroUnionRegs(accel_t_gyro_union* data)
+{
+    Serial.println("[Reg]");
+    Serial.println("-> Accelerometer");
+    Serial.print(F("X : x_h=")); Serial.print(data->reg.x_accel_h); Serial.print(F(", x_l=")); Serial.println(data->reg.x_accel_l);
+    Serial.print(F("Y : y_h=")); Serial.print(data->reg.y_accel_h); Serial.print(F(", y_l=")); Serial.println(data->reg.y_accel_l);
+    Serial.print(F("Z : z_h=")); Serial.print(data->reg.z_accel_h); Serial.print(F(", z_l=")); Serial.println(data->reg.z_accel_l);
+
+    Serial.println("-> Temperature");
+    Serial.print(F("t_h=")); Serial.print(data->reg.t_h); Serial.print(F(", t_l=")); Serial.println(data->reg.t_l);
+
+    Serial.println("-> Gyroscope");
+    Serial.print(F("X : x_h=")); Serial.print(data->reg.x_gyro_h); Serial.print(F(", x_l=")); Serial.println(data->reg.x_gyro_l);
+    Serial.print(F("Y : y_h=")); Serial.print(data->reg.y_gyro_h); Serial.print(F(", y_l=")); Serial.println(data->reg.y_gyro_l);
+    Serial.print(F("Z : z_h=")); Serial.print(data->reg.z_gyro_h); Serial.print(F(", z_l=")); Serial.println(data->reg.z_gyro_l);
+}
+
+void PrintAccelTGyroUnionValues(accel_t_gyro_union* data)
+{
+    Serial.println("[Value]");
+    Serial.print(F("Accel : x=")); Serial.print(data->value.x_accel); Serial.print(F(", y=")); Serial.print(data->value.y_accel); Serial.print(F(", z=")); Serial.println(data->value.z_accel);
+    Serial.print(F("Gryo : x=")); Serial.print(data->value.x_gyro); Serial.print(F(", y=")); Serial.print(data->value.y_gyro); Serial.print(F(", z=")); Serial.println(data->value.z_gyro);
+    Serial.print(F("Temperature : ")); Serial.println(data->value.temperature);
+}
+
+void SerialPrintAccelTGyroUnion(accel_t_gyro_union* data)
+{
+    Serial.println("--------------------");
+    PrintAccelTGyroUnionRegs(data);
+    PrintAccelTGyroUnionValues(data);
+}
+
 int read_gyro_accel_vals(uint8_t* accel_t_gyro_ptr) {
   // Read the raw values.
   // Read 14 bytes at once, 
@@ -742,7 +774,7 @@ void calibrate_sensors() {
   float                 z_gyro = 0;
   accel_t_gyro_union    accel_t_gyro;
   
-  //// Serial.println("Starting Calibration");
+  Serial.println("Starting Calibration");
 
   // Discard the first set of values read from the IMU
   read_gyro_accel_vals((uint8_t *) &accel_t_gyro);
@@ -750,12 +782,21 @@ void calibrate_sensors() {
   // Read and average the raw values from the IMU
   for (int i = 0; i < num_readings; i++) {
     read_gyro_accel_vals((uint8_t *) &accel_t_gyro);
+    // Serial.print("Calibration Loop :"); Serial.println(i);
+    // PrintAccelTGyroUnionValues(&accel_t_gyro);
     x_accel += accel_t_gyro.value.x_accel;
     y_accel += accel_t_gyro.value.y_accel;
     z_accel += accel_t_gyro.value.z_accel;
     x_gyro += accel_t_gyro.value.x_gyro;
     y_gyro += accel_t_gyro.value.y_gyro;
     z_gyro += accel_t_gyro.value.z_gyro;
+    // Serial.println("Accumulated values:");
+    // Serial.print("x_accel="); Serial.println(x_accel);
+    // Serial.print("y_accel="); Serial.println(y_accel);
+    // Serial.print("z_accel="); Serial.println(z_accel);
+    // Serial.print("x_gyro="); Serial.println(x_gyro);
+    // Serial.print("y_gyro="); Serial.println(y_gyro);
+    // Serial.print("z_gyro="); Serial.println(z_gyro);
     delay(100);
   }
   x_accel /= num_readings;
@@ -772,8 +813,13 @@ void calibrate_sensors() {
   base_x_gyro = x_gyro;
   base_y_gyro = y_gyro;
   base_z_gyro = z_gyro;
-  
-  //// Serial.println("Finishing Calibration");
+
+  Serial.println("Raw calibration values:");
+  Serial.print("Accel<x=" + (String) base_x_accel + ",y=" + (String) base_y_accel + ",z=" + (String) base_z_accel + ">");
+  Serial.println("Gyro<x=" + (String) base_x_gyro + ",y=" + (String) base_y_gyro + ",z=" + (String) base_z_gyro + ">");
+
+  Serial.println("Finishing Calibration");
+  delay(500);
 }
 
 
@@ -783,7 +829,7 @@ void setup()
   uint8_t c;
 
 
-  Serial.begin(19200);
+  Serial.begin(9600);
   /*
   // Serial.println(F("InvenSense MPU-6050"));
   // Serial.println(F("June 2012"));
@@ -845,6 +891,8 @@ void loop()
   
   // Get the time of reading for rotation computations
   unsigned long t_now = millis();
+
+  // SerialPrintAccelTGyroUnion(&accel_t_gyro);
    
 /*
   // // Serial.print(F("Read accel, temp and gyro, error = "));
@@ -895,6 +943,8 @@ void loop()
   float gyro_x = (accel_t_gyro.value.x_gyro - base_x_gyro)/FS_SEL;
   float gyro_y = (accel_t_gyro.value.y_gyro - base_y_gyro)/FS_SEL;
   float gyro_z = (accel_t_gyro.value.z_gyro - base_z_gyro)/FS_SEL;
+
+  // Serial.println("Gyro<"); Serial.print(gyro_x); Serial.print(gyro_y); Serial.print(gyro_z); Serial.println(">");
   
   
   // Get raw acceleration values
@@ -902,20 +952,26 @@ void loop()
   float accel_x = accel_t_gyro.value.x_accel;
   float accel_y = accel_t_gyro.value.y_accel;
   float accel_z = accel_t_gyro.value.z_accel;
+
+  // Serial.println("Accel<"); Serial.print(accel_x); Serial.print(accel_y); Serial.print(accel_z); Serial.println(">");
   
   // Get angle values from accelerometer
   float RADIANS_TO_DEGREES = 180/3.14159;
-//  float accel_vector_length = sqrt(pow(accel_x,2) + pow(accel_y,2) + pow(accel_z,2));
+  //  float accel_vector_length = sqrt(pow(accel_x,2) + pow(accel_y,2) + pow(accel_z,2));
   float accel_angle_y = atan(-1*accel_x/sqrt(pow(accel_y,2) + pow(accel_z,2)))*RADIANS_TO_DEGREES;
   float accel_angle_x = atan(accel_y/sqrt(pow(accel_x,2) + pow(accel_z,2)))*RADIANS_TO_DEGREES;
 
   float accel_angle_z = 0;
+
+  // Serial.println("AccelAngle<"); Serial.print(accel_angle_x); Serial.print(accel_angle_y); Serial.print(accel_angle_z); Serial.println(">");
   
   // Compute the (filtered) gyro angles
   float dt =(t_now - get_last_time())/1000.0;
   float gyro_angle_x = gyro_x*dt + get_last_x_angle();
   float gyro_angle_y = gyro_y*dt + get_last_y_angle();
   float gyro_angle_z = gyro_z*dt + get_last_z_angle();
+
+  // Serial.println("GyroAngle<"); Serial.print(gyro_angle_x); Serial.print(gyro_angle_y); Serial.print(gyro_angle_z); Serial.println(">");
   
   // Compute the drifting gyro angles
   float unfiltered_gyro_angle_x = gyro_x*dt + get_last_gyro_x_angle();
@@ -933,41 +989,42 @@ void loop()
   set_last_read_angle_data(t_now, angle_x, angle_y, angle_z, unfiltered_gyro_angle_x, unfiltered_gyro_angle_y, unfiltered_gyro_angle_z);
   
   // Send the data to the serial port
-  // Serial.print(F("DEL:"));              //Delta T
-  // Serial.print(dt, DEC);
-  // Serial.print(F("#ACC:"));              //Accelerometer angle
-  // Serial.print(accel_angle_x, 2);
+  // Serial.print(F("DELTA T="));              //Delta T
+  // Serial.println(dt, DEC);
+  // Serial.print(F("ACCELEROMETER ANGLES"));              //Accelerometer angle
+  // Serial.print(accel_angle_x);
   // Serial.print(F(","));
-  // Serial.print(accel_angle_y, 2);
+  // Serial.print(accel_angle_y);
   // Serial.print(F(","));
-  // Serial.print(accel_angle_z, 2);
-  // Serial.print(F("#GYR:"));
-  // Serial.print(unfiltered_gyro_angle_x, 2);        //Gyroscope angle
+  // Serial.println(accel_angle_z);
+  // Serial.print(F("GYROSCOPE ANGLES"));
+  // Serial.print(unfiltered_gyro_angle_x);        //Gyroscope angle
   // Serial.print(F(","));
-  // Serial.print(unfiltered_gyro_angle_y, 2);
+  // Serial.print(unfiltered_gyro_angle_y);
   // Serial.print(F(","));
-  // Serial.print(unfiltered_gyro_angle_z, 2);
-  // Serial.print(F("#FIL:"));             //Filtered angle
-  Serial.print(angle_x, 2);
-  Serial.print(F(","));
-  Serial.print(angle_y, 2);
-  Serial.print(F(","));
-  Serial.print(angle_z, 2);
-  Serial.println(F(""));
+  // Serial.println(unfiltered_gyro_angle_z);
+  // Serial.print(F("#FIL:"));
+  // Filtered angle
   Serial.print("[UnityArdupilot]");
-  Serial.print("AngleX="); Serial.print(angle_x, 2);
-  Serial.print("|AngleY="); Serial.print(angle_y, 2);
-  Serial.print("|AngleZ="); Serial.print(angle_z, 2);
-  Serial.print("|Tmp="); // Serial.print(mpu6050.getTemp());
-    
-  Serial.print("|AccAngleX=");// Serial.print(mpu6050.getAccAngleX());
-  Serial.print("|AccAngleY=");// Serial.print(mpu6050.getAccAngleY());
-    
-  Serial.print("|GyroAngleX=");// Serial.print(mpu6050.getGyroAngleX());
-  Serial.print("|GyroAngleY=");// Serial.print(mpu6050.getGyroAngleY());
-  Serial.print("|GyroAngleZ=");// Serial.println(mpu6050.getGyroAngleZ());
+  // Serial.print(angle_x, 2);
+  // Serial.print(F(","));
+  // Serial.print(angle_y, 2);
+  // Serial.print(F(","));
+  // Serial.print(angle_z, 2);
+  // Serial.println(F(""));
+  Serial.print("AngleX="); Serial.print(angle_x);
+  Serial.print(",AngleY="); Serial.print(angle_y);
+  Serial.print(",AngleZ="); Serial.println(angle_z);
+  // Serial.print("|Tmp="); // Serial.print(mpu6050.getTemp());
+
+  // Serial.print("|AccAngleX=");// Serial.print(mpu6050.getAccAngleX());
+  // Serial.print("|AccAngleY=");// Serial.print(mpu6050.getAccAngleY());
+
+  // Serial.print("|GyroAngleX=");// Serial.print(mpu6050.getGyroAngleX());
+  // Serial.print("|GyroAngleY=");// Serial.print(mpu6050.getGyroAngleY());
+  // Serial.print("|GyroAngleZ=");// Serial.println(mpu6050.getGyroAngleZ());
   // Delay so we don't swamp the serial port
-  delay(5);
+  delay(10);
 }
 
 

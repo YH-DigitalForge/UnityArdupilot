@@ -20,23 +20,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bcaab2f5-52ad-401b-9ad0-1ba8af51f2b0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/Materials.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/Materials/grassisgrass.mat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/Materials/grassisgrass.mat.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/Model/Materials/skyissky.mat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/Model/Materials/skyissky.mat.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/Model/skyissky.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/Model/skyissky.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/New Material.mat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/New Material.mat.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/SkyBox_BlueSky.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/SkyBox_BlueSky.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/grassisgrass.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Resource/grassisgrass.jpg.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/WSATestCertificate.pfx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/WSATestCertificate.pfx.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ArduPilot/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArduPilot/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArduPilot/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArduPilot/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resource/Model/FreeCities/Residential Buildings Set.unitypackage.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/PilotBehavior.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PilotBehavior.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/arduino/mpu6050Lib/mpu6050Lib.ino" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/arduino/mpu6050Lib/mpu6050Lib.ino" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/arduino/gy_521_send_serial/gy_521_send_serial.ino" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/arduino/gy_521_send_serial/gy_521_send_serial.ino" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,12 +45,14 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9674024A-B0E7-4D27-BBE9-EAA30DAB34D1/d7/37d5ca41/Transform.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5DE66FF1-1FCB-4513-8463-255B392B032B/66/ef03e695/SerialDataReceivedEventHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9B956647-017D-4DC1-B8D3-D25EEF012467/cd/a7eca8ed/Rigidbody.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0847A0FA-F944-44CC-BAF1-958021B27F54/21/e1525edd/Quaternion.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/metadata/99258562-0D64-4271-98DD-F3A0E1467733/ac/d5db92f6/netstandard.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/63DD8BF9-8CFA-4BA9-85AF-735EF1A56BA9/3f/04533903/Stream.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9674024A-B0E7-4D27-BBE9-EAA30DAB34D1/31/68851d4c/ILogger.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9674024A-B0E7-4D27-BBE9-EAA30DAB34D1/7e/d3ca6bd3/Object.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/63DD8BF9-8CFA-4BA9-85AF-735EF1A56BA9/22/1a106110/String.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/63DD8BF9-8CFA-4BA9-85AF-735EF1A56BA9/97/940c20ed/Object.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/EF151B6A-BB5D-474C-B2C1-CB8906A8B5A4/88/d2699db3/WinSerialStream.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9674024A-B0E7-4D27-BBE9-EAA30DAB34D1/0e/6735c2ef/Debug.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9674024A-B0E7-4D27-BBE9-EAA30DAB34D1/87/7ae70832/Space.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5DE66FF1-1FCB-4513-8463-255B392B032B/57/8802970c/SerialPort.cs" root0="SKIP_HIGHLIGHTING" />
@@ -80,6 +75,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34994584" />
+    <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.30010834" />
     <property name="Discover.Launch.Via.Unity" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -89,9 +86,10 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C#" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor &amp; Play">
     <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="$PROJECT_DIR$/build\ArduPilot.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -134,6 +132,8 @@
       <workItem from="1605239693528" duration="789000" />
       <workItem from="1605251536272" duration="7949000" />
       <workItem from="1605498151580" duration="1000000" />
+      <workItem from="1609809246485" duration="5628000" />
+      <workItem from="1609819626810" duration="1558000" />
     </task>
     <servers />
   </component>
@@ -157,5 +157,75 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1877" height="375" key="GridCell.Tab.0.bottom" timestamp="1609818551027">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1609818551026" />
+    <state width="1877" height="375" key="GridCell.Tab.0.center" timestamp="1609818551026">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1609818551026" />
+    <state width="1877" height="375" key="GridCell.Tab.0.left" timestamp="1609818551026">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1609818551026" />
+    <state width="1877" height="375" key="GridCell.Tab.0.right" timestamp="1609818551026">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1609818551026" />
+    <state width="1877" height="375" key="GridCell.Tab.1.bottom" timestamp="1609818551027">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1609818551027" />
+    <state width="1877" height="375" key="GridCell.Tab.1.center" timestamp="1609818551027">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1609818551027" />
+    <state width="1877" height="375" key="GridCell.Tab.1.left" timestamp="1609818551027">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1609818551027" />
+    <state width="1877" height="375" key="GridCell.Tab.1.right" timestamp="1609818551027">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1609818551027" />
+    <state width="1877" height="375" key="GridCell.Tab.2.bottom" timestamp="1609818551027">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.2.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1609818551027" />
+    <state width="1877" height="375" key="GridCell.Tab.2.center" timestamp="1609818551027">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.2.center/0.0.1920.1040@0.0.1920.1040" timestamp="1609818551027" />
+    <state width="1877" height="375" key="GridCell.Tab.2.left" timestamp="1609818551027">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.2.left/0.0.1920.1040@0.0.1920.1040" timestamp="1609818551027" />
+    <state width="1877" height="375" key="GridCell.Tab.2.right" timestamp="1609818551027">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.2.right/0.0.1920.1040@0.0.1920.1040" timestamp="1609818551027" />
+    <state width="1877" height="375" key="GridCell.Tab.3.bottom" timestamp="1609818553678">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.3.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1609818553678" />
+    <state width="1877" height="375" key="GridCell.Tab.3.center" timestamp="1609818553678">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.3.center/0.0.1920.1040@0.0.1920.1040" timestamp="1609818553678" />
+    <state width="1877" height="375" key="GridCell.Tab.3.left" timestamp="1609818553678">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.3.left/0.0.1920.1040@0.0.1920.1040" timestamp="1609818553678" />
+    <state width="1877" height="375" key="GridCell.Tab.3.right" timestamp="1609818553678">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="375" key="GridCell.Tab.3.right/0.0.1920.1040@0.0.1920.1040" timestamp="1609818553678" />
+    <state x="461" y="164" key="SettingsEditor" timestamp="1609818437976">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1609818437976" />
   </component>
 </project>
